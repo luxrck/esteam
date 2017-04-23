@@ -53,7 +53,7 @@ async def index(request):
         if app.bot and app.bot.logged_on:
             return render_template("403", text = "Another user is logging or already logged on.")
         return render_template("login")
-    return render_template("index")
+    return render_template("index", is_farming=(app.bot.username in app.manager.farmers))
 
 
 # @app.route('/auth', methods=["POST"])
@@ -89,6 +89,7 @@ async def logout(request):
         return json({"errno": 10, "msg": "method need authorized."})
     del request["session"]["authorized"]
     del request["session"]["remain_attemps"]
+    app.manager.pop(app.bot)
     await app.bot.logout()
     return json({"errno": 0, "msg": ""})
     # return redirect("/")

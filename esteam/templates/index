@@ -10,7 +10,7 @@
 
 <div class="tab-content m-flex m-flex-layout-col">
   <div id="tab-farm" class="tab-pane m-flex m-flex-layout-col active">
-    <div class="m-flex m-flex-layout-col" style="justify-content: center"><button id="farm" data-state="start" class="btn btn-primary btn-farm">Start</button></div>
+    <div class="m-flex m-flex-layout-col" style="justify-content: center"><button id="farm" data-state={{ "stop" if is_farming else "start" }} class="btn btn-primary btn-farm"></button></div>
     <button id="logout" class="btn btn-danger">Logout</button>
   </div>
   <div id="tab-redeem" class="tab-pane m-flex m-flex-layout-col">
@@ -48,6 +48,14 @@
 </style>
 
 <script>
+var farmupdate = function(state) {
+  if (state) {
+    $("#farm").data("state", state);
+  }
+  state = $("#farm").data("state");
+  $("#farm").text(state.charAt(0).toUpperCase() + state.slice(1));
+};
+farmupdate();
 $("#farm").on("click", function(e) {
   var state = $(e.target).data("state");
   $.post({
@@ -57,8 +65,7 @@ $("#farm").on("click", function(e) {
   }).done(function(e) {
     console.log(e);
     state = state === "start" ? "stop" : "start";
-    $("#farm").data("state", state);
-    $("#farm").text(state.charAt(0).toUpperCase() + state.slice(1));
+    farmupdate(state);
   });
 });
 
