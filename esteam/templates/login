@@ -1,0 +1,41 @@
+{% extends "_base" %}
+
+{% block title %}<title>Authentication</title>{% endblock %}
+
+{% block main %}
+<div class="tab-login m-flex m-flex-layout-col">
+  <div class="login-box m-flex m-flex-layout-col">
+    <p class="form-header">Esteam Control Panel</p>
+    <div class="form-group">
+      <input type="text" class="form-control" id="token" name="token" placeholder="Enter your steam 2fa code"></input>
+    </div>
+    <button id="login" class="btn btn-primary">Continue</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<style>
+.login-box {
+  justify-content: center;
+}
+
+.form-header {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1;
+  margin-bottom: 32px;
+  text-align: center;
+}
+</style>
+
+<script>
+$("#login").on("click", function(e) {
+  $.post({
+    url: "login",
+    data: JSON.stringify({token: $("#token").get(0).value}),
+    dataType: "json",
+  }).done(function(e) {console.log(e); location.reload(); });
+});
+</script>
+{% endblock %}

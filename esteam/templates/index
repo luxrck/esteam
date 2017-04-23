@@ -1,0 +1,88 @@
+{% extends "_base" %}
+
+{% block title %}<title>ESteam Control Panel</title>{% endblock %}
+
+{% block main %}
+<div class="btn-group btn-group-justified tab-header" role="group">
+  <a class="btn btn-default active" href="#tab-farm" data-toggle="tab">Farming</a>
+  <a class="btn btn-default" href="#tab-redeem" data-toggle="tab">Redeem</a>
+</div>
+
+<div class="tab-content m-flex m-flex-layout-col">
+  <div id="tab-farm" class="tab-pane m-flex m-flex-layout-col active">
+    <div class="m-flex m-flex-layout-col" style="justify-content: center"><button id="farm" data-state="start" class="btn btn-primary btn-farm">Start</button></div>
+    <button id="logout" class="btn btn-danger">Logout</button>
+  </div>
+  <div id="tab-redeem" class="tab-pane m-flex m-flex-layout-col">
+    <div class="redeem-box m-flex m-flex-layout-col">
+      <div class="form-group m-flex m-flex-layout-col">
+        <textarea class="form-control m-flex" id="keys" name="keys" placeholder="Enter your steam keys, one per line."></textarea>
+      </div>
+      <button id="redeem" class="btn btn-primary">Redeem</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<style>
+.btn-farm {
+  width: 256px;
+  height: 256px;
+  border-radius: 128px;
+  align-self: center;
+  font-size: 64px;
+  box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+}
+
+.tab-content > .active {
+  display: flex;
+  flex-direction: column;
+}
+
+.m-flex-layout-col {
+  display: flex;
+  flex-direction: column;
+}
+</style>
+
+<script>
+$("#farm").on("click", function(e) {
+  var state = $(e.target).data("state");
+  $.post({
+    url: "farm",
+    data: JSON.stringify({cmd: state, scheduler: "simple", appids: [] }),
+    dataType: "json",
+  }).done(function(e) {
+    console.log(e);
+    state = state === "start" ? "stop" : "start";
+    $("#farm").data("state", state);
+    $("#farm").text(state.charAt(0).toUpperCase() + state.slice(1));
+  });
+});
+
+$("#logout").on("click", function(e) {
+  $.post({
+    url: "logout",
+  }).done(function(e) { location.reload(); });
+});
+
+$("#redeem").on("click", function(e) {
+  $.post({
+    url: "redeem",
+    data: JSON.stringify({keys: $("#keys").get(0).value})
+  }).done(function(e) {
+    console.log(e);
+    $("#keys").get(0).value = "";
+  })
+});
+
+$(".tab-header > .btn").on("click", function(e) {
+  var e = $(e.target),
+      a = e.parent().find(".active");
+  a.removeClass("active");
+  e.addClass("active");
+});
+</script>
+{% endblock %}

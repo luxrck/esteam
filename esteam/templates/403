@@ -1,0 +1,10 @@
+{% extends "_base" %}
+
+{% block title %}<title>Access Denied</title>{% endblock %}
+
+{% block main %}
+<div class="container">
+<h2>Access Denied</h2>
+<h3>{{text}}</h3>
+</div>
+{% endblock %}
