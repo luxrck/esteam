@@ -15,7 +15,6 @@ from . import otp
 class Config(object):
     __instance__ = None
     def __new__(cls, *args, **kw):
-        print("Config.__instance__")
         if not Config.__instance__:
             self = Config.__instance__ = object.__new__(cls)
         return Config.__instance__

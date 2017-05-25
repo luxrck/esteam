@@ -22,10 +22,11 @@ app = Sanic(__name__)
 session_interface = InMemorySessionInterface()
 
 
-def init(app, loop):
+@app.listener("before_server_start")
+async def init(app, loop):
     app.env = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates")))
     app.manager = FarmerManager()
-    loop.create_task(app.manager.run(async=True))
+    loop.create_task(app.manager.run(asynchronous=True))
     app.bot = SteamClient(config().username, config().password, loop=loop)
 
 
@@ -143,7 +144,7 @@ async def redeem(request):
 
 
 def serve(host, port):
-    app.run(host=host, port=port, workers=1, before_start=init)
+    app.run(host=host, port=port, workers=1)
 
 
 if __name__ == '__main__':

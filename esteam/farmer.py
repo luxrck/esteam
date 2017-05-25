@@ -156,7 +156,7 @@ class FarmerManager(object):
             await asyncio.sleep(1)
 
 
-    def run(self, async=False):
-        if not async:
+    def run(self, asynchronous=False):
+        if not asynchronous:
             return threading.Thread(target=self.loop.run_until_complete, args=([__run__(self)]), daemon=True).start()
         return self.run_async()

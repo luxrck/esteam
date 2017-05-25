@@ -1,4 +1,4 @@
-max_running_time = 20 * 60
+max_running_time = 15 * 60
 check_cards_remains_interval = 5 * 60
 # @games = {
 #   id: @game,
